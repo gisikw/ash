@@ -1,0 +1,21 @@
+{
+  "name": "ash",
+  "version": "1.0.0",
+  "description": "An Elm-like JS microframework",
+  "main": "index.js",
+  "repository": "https://github.com/gisikw/ash",
+  "author": "Kevin Gisi",
+  "license": "MIT",
+  "private": false,
+  "scripts": {
+    "test": "tape test/*.js",
+    "build": "webpack"
+  },
+  "devDependencies": {
+    "babel-preset-env": "^1.6.1",
+    "jsdom": "^11.6.2",
+    "tape": "^4.9.0",
+    "webpack": "^4.2.0",
+    "webpack-cli": "^2.0.13"
+  }
+}
