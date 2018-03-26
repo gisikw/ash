@@ -1,1 +1,34 @@
-var ash=function(e){var t={};function r(n){if(t[n])return t[n].exports;var o=t[n]={i:n,l:!1,exports:{}};return e[n].call(o.exports,o,o.exports,r),o.l=!0,o.exports}return r.m=e,r.c=t,r.d=function(e,t,n){r.o(e,t)||Object.defineProperty(e,t,{configurable:!1,enumerable:!0,get:n})},r.r=function(e){Object.defineProperty(e,"__esModule",{value:!0})},r.n=function(e){var t=e&&e.__esModule?function(){return e.default}:function(){return e};return r.d(t,"a",t),t},r.o=function(e,t){return Object.prototype.hasOwnProperty.call(e,t)},r.p="",r(r.s=0)}([function(e,t){e.exports={mount:(e,t)=>{const{view:r,model:n,update:o}=t;let u;const c=e=>{if("string"==typeof e)return document.createTextNode(e);const t=document.createElement(e[0]);return Object.entries(e[1]).forEach(e=>{const r=e[0],n=e[1];/^on/.test(r)?t.addEventListener(r.slice(2).toLowerCase(),(...e)=>i(n(...e))):n?t.setAttribute("className"===r?"class":r,n):t.removeAttribute(r)}),e[2].map(c).forEach(e=>t.appendChild(e)),t},i=t=>{if((o||!u)&&t){for(u=u?o(t,u):n&&n();e.firstChild;)e.removeChild(e.firstChild);e.appendChild(c(r(u)))}};return i(1),{update:i}}}}]);
+"use strict";
+
+function ash(name, props) {
+  return [name, props || {}, [].slice.call(arguments, 2)];
+}
+
+ash.mount = function(root, app, m) {
+  function make(node) {
+    if (node.split) return document.createTextNode(node);
+    var e = document.createElement(node[0]);
+    Object.keys(node[1]).forEach(function(k) {
+      var v = node[1][k];
+      if (/^on/.test(k)) {
+        e.addEventListener(k.slice(2).toLowerCase(), function() {
+          render(v.apply(this, arguments));
+        });
+      } else {
+        if (v) e.setAttribute(k === "className" ? "class" : k, v);
+        else e.removeAttribute(k);
+      }
+    });
+    node[2].map(make).forEach(e.appendChild.bind(e));
+    return e;
+  }
+
+  function render(action) {
+    if ((!app.update && m) || !action) return;
+    m = m ? app.update(action, m) : app.model && app.model();
+    while (root.firstChild) root.removeChild(root.firstChild);
+    root.appendChild(make(app.view(m)));
+  }
+  render(1);
+  return render;
+};

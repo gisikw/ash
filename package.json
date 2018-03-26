@@ -8,14 +8,17 @@
   "license": "MIT",
   "private": false,
   "scripts": {
-    "test": "tape test/*.js",
-    "build": "webpack"
+    "test": "npm run build && tape test/*.js",
+    "build": "npm run build:dist && npm run build:min && npm run build:min:test",
+    "build:dist": "cat src/ash.js | grep -v 'module.exports' > dist/ash.js",
+    "build:min": "babel dist/ash.js | uglifyjs -c -m > dist/ash.min.js",
+    "build:min:test": "cat dist/ash.min.js > src/ash.min.js && echo 'module.exports=ash;' >> src/ash.min.js"
   },
   "devDependencies": {
+    "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.6.1",
     "jsdom": "^11.6.2",
     "tape": "^4.9.0",
-    "webpack": "^4.2.0",
-    "webpack-cli": "^2.0.13"
+    "uglify-js": "^3.3.16"
   }
 }
